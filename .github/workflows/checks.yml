@@ -1,0 +1,57 @@
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly, so external link rot surfaces on its own rather than at the next edit.
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  markdown:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
+        with:
+          globs: "**/*.md"
+
+      - name: Pin the MD041 exception
+        # profile/README.md carries a scoped MD041 disable, because the brand
+        # lockup has to precede the h1. That suppression is only honest while the
+        # h1 it points at actually exists — otherwise deleting the heading would
+        # silently reintroduce the accessibility defect with no check failing.
+        # Assert the property the rule was protecting instead of trusting it.
+        run: |
+          count=$(grep -c '^# ' profile/README.md || true)
+          if [ "$count" -ne 1 ]; then
+            echo "::error file=profile/README.md::expected exactly 1 top-level heading, found $count"
+            exit 1
+          fi
+          echo "profile/README.md has exactly one h1"
+
+  links:
+    name: link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --no-progress
+            --include-verbatim
+            --max-retries 3
+            --timeout 20
+            --accept 200,206,301,302,403
+            .
+          fail: true
