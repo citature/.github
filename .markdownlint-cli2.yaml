@@ -1,0 +1,20 @@
+# The profile README is a rendered GitHub page, not a document tree, so a few
+# rules that assume prose-document structure are relaxed deliberately.
+config:
+  # Line length: prose is wrapped by hand at ~80. Tables, links, and the inline
+  # HTML the org profile needs cannot always honour that.
+  MD013:
+    line_length: 100
+    tables: false
+    code_blocks: false
+  # GitHub renders raw HTML in profile READMEs and it is the only way to centre
+  # the brand lockup. Allowed, but kept to the block elements actually needed.
+  MD033:
+    allowed_elements: [div, img, sub, b, a, br, picture, source]
+  # Duplicate headings are fine across separate files in this repo.
+  MD024:
+    siblings_only: true
+
+globs:
+  - "**/*.md"
+  - "!LICENSE"
