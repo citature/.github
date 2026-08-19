@@ -1,0 +1,64 @@
+name: Bug report
+description: Something returned the wrong answer, failed, or contradicted its own receipt.
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        **Stop if this involves provenance or personal data.** A forged or
+        missing citation, a wrong `retrieved_at`, or anything exposing an
+        individual person is a security issue — report it privately through
+        [security advisories](https://github.com/citature/.github/security/advisories/new)
+        rather than here. Everything else belongs in this form.
+
+  - type: input
+    id: surface
+    attributes:
+      label: Tool or actor
+      description: The MCP tool name or the Apify actor, as you called it.
+      placeholder: follow_the_money · govcon-recompetes
+    validations:
+      required: true
+
+  - type: textarea
+    id: input
+    attributes:
+      label: What you ran
+      description: The exact arguments or actor input. Redact nothing — these are public records.
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and what you got instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: receipt
+    attributes:
+      label: The receipt
+      description: >-
+        Paste the receipt envelope from the answer if you have it — the citation,
+        `retrieved_at`, and match provenance. It is usually the fastest route to
+        the cause, because it says which upstream file the answer came from.
+      render: json
+    validations:
+      required: false
+
+  - type: dropdown
+    id: source
+    attributes:
+      label: Which source does this touch?
+      multiple: true
+      options:
+        - FEC
+        - USASpending
+        - SAM.gov
+        - Grants.gov
+        - Not sure
+    validations:
+      required: false
