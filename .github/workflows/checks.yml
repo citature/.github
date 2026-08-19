@@ -26,6 +26,20 @@ jobs:
         with:
           globs: "**/*.md"
 
+      - name: Pin the MD041 exception
+        # profile/README.md carries a scoped MD041 disable, because the brand
+        # lockup has to precede the h1. That suppression is only honest while the
+        # h1 it points at actually exists — otherwise deleting the heading would
+        # silently reintroduce the accessibility defect with no check failing.
+        # Assert the property the rule was protecting instead of trusting it.
+        run: |
+          count=$(grep -c '^# ' profile/README.md || true)
+          if [ "$count" -ne 1 ]; then
+            echo "::error file=profile/README.md::expected exactly 1 top-level heading, found $count"
+            exit 1
+          fi
+          echo "profile/README.md has exactly one h1"
+
   links:
     name: link check
     runs-on: ubuntu-latest
