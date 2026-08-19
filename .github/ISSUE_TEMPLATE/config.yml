@@ -1,0 +1,16 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Vulnerability, provenance, or personal-data concern — report privately
+    url: https://github.com/citature/.github/security/advisories/new
+    about: >-
+      Do not open a public issue. Anything that could let a citation, retrieval
+      timestamp, or source locator be forged, and anything involving personal
+      data, goes here privately. See SECURITY.md for scope.
+
+  - name: Incorrect data in a federal source
+    url: https://github.com/citature/.github/issues/new?template=bug.yml
+    about: >-
+      If a government source itself published something wrong, that is an
+      upstream data issue rather than a citature bug. File it as a bug report
+      and it will be documented as a coverage caveat.
